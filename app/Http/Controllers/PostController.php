@@ -12,9 +12,7 @@ class PostController extends Controller
             $data['posts'] = Post::with('category')->get();
 
             return view('pages.home',$data);
-            // return response()->json(
-            //     ['data' => $data]
-            // );
+           
     }
 
     public function categoryPostCount($category_id){
