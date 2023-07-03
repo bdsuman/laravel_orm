@@ -1,4 +1,3 @@
-
 <nav class="navbar shadow-sm sticky-top navbar-expand-lg navbar-light bg-white py-3">
     <div class="container px-5">
         <a class="navbar-brand" href={{url('/allPost')}}><span class="fw-bolder text-primary">SRZ</span></a>
