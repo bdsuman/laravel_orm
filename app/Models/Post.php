@@ -18,11 +18,11 @@ class Post extends Model
             return $this->belongsTo(Category::class);
         }
 
-        public static function totalPostsCountByCategory($categoryId){
+        public static function categoryWisePostCount($categoryId){
             return self::where('category_id', $categoryId)->count();
         }
 
-        public static function softDeletedData(){
+        public static function softDeletedRows(){
             return self::onlyTrashed()->get();
         }
 

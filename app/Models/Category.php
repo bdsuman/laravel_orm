@@ -14,7 +14,7 @@ class Category extends Model
         return $this->hasMany(Post::class);
     }
 
-    public function latestPost(){
+    public function allLatestPost(){
 
         return $this->posts()->latest('updated_at')->first();
 

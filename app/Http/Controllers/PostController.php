@@ -8,43 +8,68 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function postAll(){
+    public function allPost(){
             $data['posts'] = Post::with('category')->get();
 
-            return $data;
+            return view('pages.home',$data);
+            // return response()->json(
+            //     ['data' => $data]
+            // );
     }
 
-    public function categoryPost($category_id){
-        $postCount = Post::totalPostsCountByCategory($category_id);
+    public function categoryPostCount($category_id){
+        $data['category'] = Category::find($category_id)->name;
+        $data['total_number_of_posts'] = Post::categoryWisePostCount($category_id);
 
         return response()->json(
-            ['Count' => $postCount]
-        );
+            [   
+                'data' => $data
+                
+            ]);
     }
 
-    public function softDelete($id){
-        $softDelete = Post::find($id)->delete();
-        if ($softDelete) {
-            return 'successfully soft deleted';
-        } else {
-            return 'failed to softdelete';
+    public function delete($id){
+        try {
+        $softDelete = Post::findOrFail($id)->delete();
+            return 'Successfully Soft deleted';
+        } catch (\Exception $e) {
+            return 'Failed to Softdelete. try Again';
         }
     }
-    public function specificCatPost($id){
+    public function categoryWisePost($id){
         try {
             $category = Category::findOrFail($id);
-            return $category->posts;
+            $data['name'] =  $category->name;
+            $data['posts'] =  $category->posts;
+            return response()->json([   
+                    'data' => $data
+                ]);
         } catch (\Exception $e) {
-            return 'Category not found.';
+            return 'Category Not found.';
         }
     }
-    public function latestPost($id){
-        $category = Category::findOrFail($id)->latestPost();
-        return $category;
+    public function categoryWiseLatestPost($id){
+        try {
+            $category = Category::findOrFail($id);
+            $data['name'] =  $category->name;
+            $data['posts'] =  $category->allLatestPost();
+            return response()->json([   
+                    'data' => $data
+                ]);
+            
+        } catch (\Exception $e) {
+            return 'Category Not found.';
+        }
     }
 
-    public function softData(){
-        $softData = Post::softDeletedData();;
+    public function CategoriesLatestPosts()
+    {
+        $data['categories'] = Category::all();
+        return view('pages.categories', $data);
+    }
+
+    public function allSoftDeletedRows(){
+        $softData = Post::softDeletedRows();
         return $softData;
     }
 }
